@@ -57,13 +57,13 @@ func (me Set[T]) String() string {
 	s := "{"
 	sep := ""
 	for _, element := range elements {
-		s += fmt.Sprintf("%s%s", sep, asstr(element))
+		s += sep + asStr(element)
 		sep = " "
 	}
 	return s + "}"
 }
 
-func asstr(x any) string {
+func asStr(x any) string {
 	if s, ok := x.(string); ok {
 		return fmt.Sprintf("%q", s)
 	}

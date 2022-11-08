@@ -29,8 +29,8 @@ func TestNew(t *testing.T) {
 	b := New("a string")
 	check(b.String(), len(b), "{\"a string\"}", 1, t)
 	c := New(19, 21, 1, 2, 4, 8)
-	check(c.String(), len(c), "{1 19 2 21 4 8}", 6, t)
-	s := []string{"De", "B", "A", "C", "Fgh"}
+	check(c.String(), len(c), "{1 2 4 8 19 21}", 6, t)
+	s := []string{"A", "B", "C", "De", "Fgh"}
 	d := New(s...)
 	check(d.String(), len(d), "{\"A\" \"B\" \"C\" \"De\" \"Fgh\"}", len(s),
 		t)
@@ -46,13 +46,13 @@ func TestToSlice(t *testing.T) {
 func TestAdd(t *testing.T) {
 	s := New(19, 21, 1, 2, 4, 8)
 	s.Add(5, 7, 1, 19)
-	check(s.String(), len(s), "{1 19 2 21 4 5 7 8}", 8, t)
+	check(s.String(), len(s), "{1 2 4 5 7 8 19 21}", 8, t)
 }
 
 func TestDelete(t *testing.T) {
 	s := New(19, 21, 1, 2, 5, 4, 8, 9, 11, 13, 7)
 	s.Delete(5, 7, 1, 19)
-	check(s.String(), len(s), "{11 13 2 21 4 8 9}", 7, t)
+	check(s.String(), len(s), "{2 4 8 9 11 13 21}", 7, t)
 }
 
 func TestClear(t *testing.T) {
@@ -100,13 +100,13 @@ func TestUnion(t *testing.T) {
 	s := New(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
 	u := New(2, 4, 6, 8, 10, 12)
 	x := s.Union(u)
-	check(x.String(), len(x), "{0 1 10 12 2 3 4 5 6 7 8 9}", 12, t)
+	check(x.String(), len(x), "{0 1 2 3 4 5 6 7 8 9 10 12}", 12, t)
 }
 
 func TestUnite(t *testing.T) {
 	s := New(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
 	s.Unite(New(2, 4, 6, 8, 10, 12))
-	check(s.String(), len(s), "{0 1 10 12 2 3 4 5 6 7 8 9}", 12, t)
+	check(s.String(), len(s), "{0 1 2 3 4 5 6 7 8 9 10 12}", 12, t)
 }
 
 func TestCopy(t *testing.T) {
