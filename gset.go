@@ -4,6 +4,7 @@
 // Set is a generic set type.
 //
 // In addition to its methods it also supports the built-in len() function.
+// And since Set is built on map you can use map methods (e.g., to iterate).
 //
 // See [New] for how to create empty or populated sets.
 package gset
@@ -46,18 +47,40 @@ func New[T comparable](elements ...T) Set[T] {
 
 // String returns a human readable string representation of the set.
 func (me Set[T]) String() string {
-	elements := make([]string, 0, len(me))
+	elements := make([]T, 0, len(me))
 	for element := range me {
-		elements = append(elements, fmt.Sprintf("%#v", element))
+		elements = append(elements, element)
 	}
-	sort.Strings(elements)
+	sort.Slice(elements, func(i, j int) bool {
+		return less(elements[i], elements[j])
+	})
 	s := "{"
 	sep := ""
 	for _, element := range elements {
-		s += fmt.Sprintf("%s%s", sep, element)
+		s += fmt.Sprintf("%s%s", sep, asstr(element))
 		sep = " "
 	}
 	return s + "}"
+}
+
+func asstr(x any) string {
+	if s, ok := x.(string); ok {
+		return fmt.Sprintf("%q", s)
+	}
+	return fmt.Sprintf("%v", x)
+}
+
+func less(a, b any) bool {
+	switch x := a.(type) {
+	case int:
+		return x < b.(int)
+	case float64:
+		return x < b.(float64)
+	case string:
+		return x < b.(string)
+	default:
+		return fmt.Sprintf("%v", a) < fmt.Sprintf("%v", b)
+	}
 }
 
 // ToSlice returns this set's elements as a slice.
