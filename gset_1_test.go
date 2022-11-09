@@ -156,4 +156,14 @@ func TestMap(t *testing.T) {
 	}
 	sort.Ints(w)
 	check(fmt.Sprintf("%v", w), len(w), "[0 1 2 3 4 5 6 7 8 9]", len(s), t)
+	if len(w) != 10 {
+		t.Error("expected 10 elements")
+	}
+	s.Clear()
+	if len(s) != 0 {
+		t.Error("expected no elements")
+	}
+	if !s.IsEmpty() {
+		t.Error("expected empty")
+	}
 }

@@ -1,11 +1,10 @@
 // Copyright © 2022 Mark Summerfield. All rights reserved.
 // License: Apache-2.0
 
-// Set is a generic set type.
+// Set is a generic set type based on a map.
 //
-// In addition to its methods it also supports the built-in len() function.
-// And since Set is built on map you can use map methods (e.g., to iterate;
-// see [ToSlice]).
+// Set supports all the map methods, functions that apply to maps (e.g.,
+// len()), and has its own often more convenient API.
 //
 // See [New] for how to create empty or populated sets.
 package gset
@@ -19,26 +18,15 @@ import (
 //go:embed Version.dat
 var Version string // This module's version.
 
-type null struct{}
-
-// Set is a generic set type. (`null` is an alias for `struct{}`.)
-type Set[T comparable] map[T]null
+type Set[T comparable] map[T]struct{}
 
 // New returns a new set containing the given elements (if any).
 // If no elements are given, the type must be specified since it can't be
 // inferred.
-//
-// Examples:
-//
-//	a := New[int]() // Type must be specified since it can't be inferred.
-//	b := New("a string")
-//	c := New(1, 2, 4, 8)
-//	s := []string{"A", "B", "C", "De", "Fgh"}
-//	d := New(s...)
 func New[T comparable](elements ...T) Set[T] {
 	set := make(Set[T], len(elements))
 	for _, element := range elements {
-		set[element] = null{}
+		set[element] = struct{}{}
 	}
 	return set
 }
@@ -84,17 +72,6 @@ func less(a, b any) bool {
 // ToSlice returns this set's elements as a slice.
 // For iteration either use this, or if you only need one value at a time,
 // use map syntax with a for loop.
-// Example:
-//
-//	s := gset.New(2, 3, 5, 7, 11, 13)
-//	slice := s.ToSlice() // Copies the lot
-//	for _, v := range slice {
-//		fmt.Println(v)
-//	}
-//	// Alternatively, one value at a time:
-//	for v := range s {
-//		fmt.Println(v)
-//	}
 func (me Set[T]) ToSlice() []T {
 	result := make([]T, 0, len(me))
 	for element := range me {
@@ -106,7 +83,7 @@ func (me Set[T]) ToSlice() []T {
 // Add adds the given element(s) to the set.
 func (me Set[T]) Add(elements ...T) {
 	for _, element := range elements {
-		me[element] = null{}
+		me[element] = struct{}{}
 	}
 }
 
@@ -124,18 +101,12 @@ func (me Set[T]) Clear() {
 	}
 }
 
+// IsEmpty returns true if the set is empty; otherwise returns false.
+// This is just a convenience for len(s) == 0.
+func (me Set[T]) IsEmpty() bool { return len(me) == 0 }
+
 // Contains returns true if element is in the set; otherwise returns false.
 // Alternatively, use map syntax.
-// Example:
-//
-//	s := gset.New("X", "Y", "Z")
-//	if s.Contains("Y") {
-//		fmt.Println("Got Y")
-//	}
-//	// Alternatively, use map syntax
-//	if _, ok := s["Y"]; ok {
-//		fmt.Println("Got Y")
-//	}
 func (me Set[T]) Contains(element T) bool {
 	_, found := me[element]
 	return found
@@ -147,7 +118,7 @@ func (me Set[T]) Difference(other Set[T]) Set[T] {
 	diff := make(Set[T])
 	for element := range me {
 		if !other.Contains(element) {
-			diff[element] = null{}
+			diff[element] = struct{}{}
 		}
 	}
 	return diff
@@ -159,12 +130,12 @@ func (me Set[T]) SymmetricDifference(other Set[T]) Set[T] {
 	diff := make(Set[T])
 	for element := range me {
 		if !other.Contains(element) {
-			diff[element] = null{}
+			diff[element] = struct{}{}
 		}
 	}
 	for element := range other {
 		if !me.Contains(element) {
-			diff[element] = null{}
+			diff[element] = struct{}{}
 		}
 	}
 	return diff
@@ -176,12 +147,12 @@ func (me Set[T]) Intersection(other Set[T]) Set[T] {
 	intersection := make(Set[T])
 	for element := range me {
 		if other.Contains(element) {
-			intersection[element] = null{}
+			intersection[element] = struct{}{}
 		}
 	}
 	for element := range other {
 		if me.Contains(element) {
-			intersection[element] = null{}
+			intersection[element] = struct{}{}
 		}
 	}
 	return intersection
@@ -189,22 +160,24 @@ func (me Set[T]) Intersection(other Set[T]) Set[T] {
 
 // Union returns a new set that contains the elements from this set and from
 // the other set (with no duplicates of course).
+// See also [Set.Unite].
 func (me Set[T]) Union(other Set[T]) Set[T] {
 	union := make(Set[T], len(me))
 	for element := range me {
-		union[element] = null{}
+		union[element] = struct{}{}
 	}
 	for element := range other {
-		union[element] = null{}
+		union[element] = struct{}{}
 	}
 	return union
 }
 
 // Unite adds all the elements from other that aren't already in this set to
 // this set.
+// See also [Set.Union].
 func (me Set[T]) Unite(other Set[T]) {
 	for element := range other {
-		me[element] = null{}
+		me[element] = struct{}{}
 	}
 }
 
@@ -212,7 +185,7 @@ func (me Set[T]) Unite(other Set[T]) {
 func (me Set[T]) Copy() Set[T] {
 	other := make(Set[T], len(me))
 	for element := range me {
-		other[element] = null{}
+		other[element] = struct{}{}
 	}
 	return other
 }
