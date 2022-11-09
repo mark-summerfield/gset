@@ -1,5 +1,5 @@
 #!/bin/bash
-clc -s -e gset_test.go
+clc -s -e gset_1_test.go  gset_2_test.go
 go mod tidy
 go fmt .
 staticcheck .
