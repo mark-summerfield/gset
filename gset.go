@@ -4,7 +4,8 @@
 // Set is a generic set type.
 //
 // In addition to its methods it also supports the built-in len() function.
-// And since Set is built on map you can use map methods (e.g., to iterate).
+// And since Set is built on map you can use map methods (e.g., to iterate;
+// see [ToSlice]).
 //
 // See [New] for how to create empty or populated sets.
 package gset
@@ -19,9 +20,6 @@ import (
 var Version string // This module's version.
 
 type null struct{}
-
-// TODO String, IsSubSet, py API; New() New(1) New(2) New(slice...) Equal
-// doc: len()
 
 // Set is a generic set type. (`null` is an alias for `struct{}`.)
 type Set[T comparable] map[T]null
@@ -84,6 +82,19 @@ func less(a, b any) bool {
 }
 
 // ToSlice returns this set's elements as a slice.
+// For iteration either use this, or if you only need one value at a time,
+// use map syntax with a for loop.
+// Example:
+//
+//	s := gset.New(2, 3, 5, 7, 11, 13)
+//	slice := s.ToSlice() // Copies the lot
+//	for _, v := range slice {
+//		fmt.Println(v)
+//	}
+//	// Alternatively, one value at a time:
+//	for v := range s {
+//		fmt.Println(v)
+//	}
 func (me Set[T]) ToSlice() []T {
 	result := make([]T, 0, len(me))
 	for element := range me {
@@ -114,6 +125,17 @@ func (me Set[T]) Clear() {
 }
 
 // Contains returns true if element is in the set; otherwise returns false.
+// Alternatively, use map syntax.
+// Example:
+//
+//	s := gset.New("X", "Y", "Z")
+//	if s.Contains("Y") {
+//		fmt.Println("Got Y")
+//	}
+//	// Alternatively, use map syntax
+//	if _, ok := s["Y"]; ok {
+//		fmt.Println("Got Y")
+//	}
 func (me Set[T]) Contains(element T) bool {
 	_, found := me[element]
 	return found

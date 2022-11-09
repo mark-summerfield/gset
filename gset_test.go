@@ -126,6 +126,7 @@ func TestEqual(t *testing.T) {
 		t.Errorf("%s == %s", s, u)
 	}
 }
+
 func TestIsDisjoing(t *testing.T) {
 	s := New(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
 	u := s.Copy()
@@ -136,4 +137,23 @@ func TestIsDisjoing(t *testing.T) {
 	if !u.IsDisjoint(w) {
 		t.Error("unexpectedly not disjoint")
 	}
+}
+
+func TestMap(t *testing.T) {
+	s := New(0, 1, 2, 3, 4, 5, 6, 7, 8, 9)
+	if !s.Contains(7) {
+		t.Error("expected to contain 7")
+	}
+	if _, ok := s[7]; !ok {
+		t.Error("expected to contain 7")
+	}
+	v := s.ToSlice()
+	sort.Ints(v)
+	check(fmt.Sprintf("%v", v), len(v), "[0 1 2 3 4 5 6 7 8 9]", len(s), t)
+	w := make([]int, 0, len(s))
+	for x := range v {
+		w = append(w, x)
+	}
+	sort.Ints(w)
+	check(fmt.Sprintf("%v", w), len(w), "[0 1 2 3 4 5 6 7 8 9]", len(s), t)
 }
