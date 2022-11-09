@@ -5,23 +5,18 @@ import (
 	"github.com/mark-summerfield/gset"
 )
 
-func ExampleNew_a() {
+func ExampleNew() {
 	a := gset.New[int]() // Type must be specified since it can't be inferred.
-	fmt.Println(a)
-	// Output: {}
-}
-
-func ExampleNew_b() {
-	b := gset.New(8, 7, 1, 2, 4, 3, 8)
-	fmt.Println(b)
-	// Output: {1 2 3 4 7 8}
-}
-
-func ExampleNew_c() {
+	fmt.Println("a:", a)
+	b := gset.New(8, 7, 4, 3, 8, 2, 1)
+	fmt.Println("b:", b)
 	s := []string{"De", "A", "Fgh", "C", "B"}
 	c := gset.New(s...)
-	fmt.Println(c)
-	// Output: {"A" "B" "C" "De" "Fgh"}
+	fmt.Println("c:", c)
+	// Output:
+	// a: {}
+	// b: {1 2 3 4 7 8}
+	// c: {"A" "B" "C" "De" "Fgh"}
 }
 
 func ExampleSet_String() {
