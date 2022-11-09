@@ -13,6 +13,7 @@ import (
 	_ "embed"
 	"fmt"
 	"sort"
+	"strings"
 )
 
 //go:embed Version.dat
@@ -40,20 +41,20 @@ func (me Set[T]) String() string {
 	sort.Slice(elements, func(i, j int) bool {
 		return less(elements[i], elements[j])
 	})
-	s := "{"
+	var s strings.Builder
+	s.WriteString("{")
 	sep := ""
 	for _, element := range elements {
-		s += sep + asStr(element)
+		s.WriteString(sep)
+		if selement, ok := any(element).(string); ok {
+			fmt.Fprintf(&s, "%q", selement)
+		} else {
+			fmt.Fprintf(&s, "%v", element)
+		}
 		sep = " "
 	}
-	return s + "}"
-}
-
-func asStr(x any) string {
-	if s, ok := x.(string); ok {
-		return fmt.Sprintf("%q", s)
-	}
-	return fmt.Sprintf("%v", x)
+	s.WriteString("}")
+	return s.String()
 }
 
 func less(a, b any) bool {
