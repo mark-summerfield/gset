@@ -136,7 +136,7 @@ func (me Set[T]) Contains(element T) bool {
 // Difference returns a new set that contains the elements which are in this
 // set that are not in the other set.
 func (me Set[T]) Difference(other Set[T]) Set[T] {
-	diff := make(Set[T])
+	diff := Set[T]{}
 	for element := range me {
 		if !other.Contains(element) {
 			diff[element] = struct{}{}
@@ -148,7 +148,7 @@ func (me Set[T]) Difference(other Set[T]) Set[T] {
 // SymmetricDifference returns a new set that contains the elements which
 // are in this set or the other set—but not in both sets.
 func (me Set[T]) SymmetricDifference(other Set[T]) Set[T] {
-	diff := make(Set[T])
+	diff := Set[T]{}
 	for element := range me {
 		if !other.Contains(element) {
 			diff[element] = struct{}{}
@@ -165,7 +165,7 @@ func (me Set[T]) SymmetricDifference(other Set[T]) Set[T] {
 // Intersection returns a new set that contains the elements this set has in
 // common with the other set.
 func (me Set[T]) Intersection(other Set[T]) Set[T] {
-	intersection := make(Set[T])
+	intersection := Set[T]{}
 	for element := range me {
 		if other.Contains(element) {
 			intersection[element] = struct{}{}
