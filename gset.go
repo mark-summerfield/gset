@@ -58,8 +58,28 @@ func asStr(x any) string {
 
 func less(a, b any) bool {
 	switch x := a.(type) {
+	case byte:
+		return x < b.(byte)
+	case int8:
+		return x < b.(int8)
+	case int16:
+		return x < b.(int16)
+	case int32:
+		return x < b.(int32)
+	case int64:
+		return x < b.(int64)
 	case int:
 		return x < b.(int)
+	case uint16:
+		return x < b.(uint16)
+	case uint32:
+		return x < b.(uint32)
+	case uint64:
+		return x < b.(uint64)
+	case uint:
+		return x < b.(uint)
+	case float32:
+		return x < b.(float32)
 	case float64:
 		return x < b.(float64)
 	case string:
