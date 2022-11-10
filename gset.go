@@ -93,11 +93,28 @@ func less(a, b any) bool {
 // ToSlice returns this set's elements as a slice.
 // For iteration either use this, or if you only need one value at a time,
 // use map syntax with a for loop.
+// See also [ToSortedSlice].
 func (me Set[T]) ToSlice() []T {
 	result := make([]T, 0, len(me))
 	for element := range me {
 		result = append(result, element)
 	}
+	return result
+}
+
+// ToSortedSlice returns this set's elements as a slice with the elements
+// sorted using <.
+// For iteration either use this, or if you only need one value at a time,
+// use map syntax with a for loop.
+// See also [ToSlice].
+func (me Set[T]) ToSortedSlice() []T {
+	result := make([]T, 0, len(me))
+	for element := range me {
+		result = append(result, element)
+	}
+	sort.Slice(result, func(i, j int) bool {
+		return less(result[i], result[j])
+	})
 	return result
 }
 

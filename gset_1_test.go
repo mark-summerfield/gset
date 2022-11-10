@@ -43,6 +43,12 @@ func TestToSlice(t *testing.T) {
 	check(fmt.Sprintf("%v", u), len(u), "[1 2 4 8 19 21]", len(s), t)
 }
 
+func TestToSortedSlice(t *testing.T) {
+	s := New(19, 21, 1, 7, 2, 4, 8, 0)
+	u := s.ToSortedSlice()
+	check(fmt.Sprintf("%v", u), len(u), "[0 1 2 4 7 8 19 21]", len(s), t)
+}
+
 func TestAdd(t *testing.T) {
 	s := New(19, 21, 1, 2, 4, 8)
 	s.Add(5, 7, 1, 19)
@@ -147,8 +153,7 @@ func TestMap(t *testing.T) {
 	if _, ok := s[7]; !ok {
 		t.Error("expected to contain 7")
 	}
-	v := s.ToSlice()
-	sort.Ints(v)
+	v := s.ToSortedSlice()
 	check(fmt.Sprintf("%v", v), len(v), "[0 1 2 3 4 5 6 7 8 9]", len(s), t)
 	w := make([]int, 0, len(s))
 	for x := range v {
