@@ -19,6 +19,8 @@ import (
 //go:embed Version.dat
 var Version string // This module's version.
 
+const maxDisplayableElements = 100
+
 type Set[T comparable] map[T]struct{}
 
 // New returns a new set containing the given elements (if any).
@@ -33,7 +35,12 @@ func New[T comparable](elements ...T) Set[T] {
 }
 
 // String returns a human readable string representation of the set.
+// If len(s) <= 100, returns "{e1 e2 ... eN}" with elements sorted by <;
+// otherwise returns "{…N elements…}" where N is len(s).
 func (me Set[T]) String() string {
+	if len(me) > maxDisplayableElements {
+		return fmt.Sprintf("{…%d elements…}", len(me))
+	}
 	elements := me.ToSortedSlice()
 	var s strings.Builder
 	s.WriteString("{")

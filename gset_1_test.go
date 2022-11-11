@@ -172,3 +172,11 @@ func TestMap(t *testing.T) {
 		t.Error("expected empty")
 	}
 }
+
+func TestStringMaxElements(t *testing.T) {
+	s := New[int]()
+	for i := 0; i < 111; i++ {
+		s.Add(i)
+	}
+	check(s.String(), len(s), "{…111 elements…}", len(s), t)
+}
