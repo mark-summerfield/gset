@@ -34,13 +34,7 @@ func New[T comparable](elements ...T) Set[T] {
 
 // String returns a human readable string representation of the set.
 func (me Set[T]) String() string {
-	elements := make([]T, 0, len(me))
-	for element := range me {
-		elements = append(elements, element)
-	}
-	sort.Slice(elements, func(i, j int) bool {
-		return less(elements[i], elements[j])
-	})
+	elements := me.ToSortedSlice()
 	var s strings.Builder
 	s.WriteString("{")
 	sep := ""
@@ -61,12 +55,12 @@ func less(a, b any) bool {
 	switch x := a.(type) {
 	case byte:
 		return x < b.(byte)
+	case rune:
+		return x < b.(rune)
 	case int8:
 		return x < b.(int8)
 	case int16:
 		return x < b.(int16)
-	case int32:
-		return x < b.(int32)
 	case int64:
 		return x < b.(int64)
 	case int:
